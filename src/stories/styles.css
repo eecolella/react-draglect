@@ -1,0 +1,20 @@
+.item {
+  background: #f0f0f0;
+  width: 96px;
+  height: 100px;
+  text-align: center;
+  line-height: 104px;
+  display: inline-block;
+  margin: 5px;
+  border-radius: 5px;
+  font-size: 14px;
+  color: #5A5A5A;
+  box-sizing: border-box;
+  cursor: default;
+  user-select: none;
+}
+
+.rds-item--selected {
+  background: #c5cbd5;
+  color: white;
+}

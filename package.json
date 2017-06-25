@@ -1,0 +1,29 @@
+{
+  "name": "react-draglect",
+  "version": "0.1.0",
+  "main": "build/index.js",
+  "dependencies": {
+    "prop-types": "^15.5.10",
+    "ramda": "^0.24.1",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1"
+  },
+  "devDependencies": {
+    "@storybook/react": "^3.1.5",
+    "babel-cli": "^6.24.1",
+    "babel-core": "^6.25.0",
+    "babel-eslint": "^7.2.3",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-object-rest-spread": "^6.23.0",
+    "babel-preset-env": "^1.4.0",
+    "babel-preset-react": "^6.24.1",
+    "flow-bin": "^0.48.0",
+    "react-scripts": "1.0.7"
+  },
+  "scripts": {
+    "start": "start-storybook -p 9009 -s public",
+    "build": "babel src -d build"
+  },
+  "author": "Ermes Enea Colella <eecolella@gmail.com> (https://github.com/eecolella)",
+  "license": "ISC"
+}
