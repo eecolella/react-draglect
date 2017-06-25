@@ -28,6 +28,8 @@ class Demo extends Component {
   render () {
     return (
       <div>
+        <h1>React Draglect</h1>
+        <h3>React JS Component for drag select with mouse</h3>
         <button onClick={e => this.setState({selects: true}) }>select all:</button>
         <button onClick={e => this.setState({selects: false}) }>clear all:</button>
         <button onClick={e => this.setState({selects: ['0', '2', '4']}) }>select 1 3 5</button>

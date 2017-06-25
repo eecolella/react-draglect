@@ -22,7 +22,7 @@
   },
   "scripts": {
     "start": "start-storybook -p 9009 -s public",
-    "build": "babel src -d build"
+    "build": "babel src -d build && build-storybook -s public -o docs"
   },
   "author": "Ermes Enea Colella <eecolella@gmail.com> (https://github.com/eecolella)",
   "license": "ISC"
