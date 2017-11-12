@@ -1,6 +1,6 @@
 {
   "name": "react-draglect",
-  "version": "0.1.0",
+  "version": "0.1.8",
   "main": "build/index.js",
   "dependencies": {
     "prop-types": "^15.5.10",
@@ -22,7 +22,12 @@
   },
   "scripts": {
     "start": "start-storybook -p 9009 -s public",
-    "build": "babel src -d build && build-storybook -s public -o demo"
+    "build": "babel src -d build",
+    "build-demo": "build-storybook -s public -o demo"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/eecolella/react-draglect"
   },
   "author": "Ermes Enea Colella <eecolella@gmail.com> (https://github.com/eecolella)",
   "license": "ISC"

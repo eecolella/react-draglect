@@ -1,1 +1,10 @@
-{"extends": ["react-app"],"settings": {"flowtype": {"onlyFilesWithFlowAnnotation": true}}}
+{
+  "extends": [
+    "react-app"
+  ],
+  "settings": {
+    "flowtype": {
+      "onlyFilesWithFlowAnnotation": true
+    }
+  }
+}

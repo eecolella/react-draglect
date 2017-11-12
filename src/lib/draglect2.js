@@ -25,7 +25,7 @@ import PropTypes from 'prop-types'
  * ~~~ Selection
  *
  */
-class Selection extends Component {
+class Selection2 extends Component {
 
   constructor (props) {
     super(props)
@@ -37,30 +37,7 @@ class Selection extends Component {
       selectedItems: {},
       appendMode   : false
     }
-    this.subscribed = {}
   }
-
-  componentWillMount = () => this.selectedChildren = {}
-
-  componentDidMount = () => this._selects(this.props.selects)
-
-  componentWillReceiveProps = nextProps => {
-    if (!nextProps.enabled) this.setState({selectedItems: {}})
-    if (this.props.selects !== nextProps.selects) this._selects(nextProps.selects)
-  }
-
-  componentDidUpdate = () => {
-    if (this.state.mouseDown && !isNil(this.state.selectionBox)) {
-      this._updateCollidingChildren(this.state.selectionBox)
-    }
-  }
-
-  _selects = x =>
-    cond([
-      [equals(true), this.selectAll],
-      [equals(false), this.clearSelection],
-      [is(Array), this.selectItems]
-    ])(x)
 
   _onMouseDown = e => {
     if (!this.props.enabled || e.button === 2 || e.nativeEvent.which === 2) return
@@ -74,9 +51,22 @@ class Selection extends Component {
     window.document.addEventListener('mouseup', this._onMouseUp)
   }
 
+  _onMouseMove = e => {
+    const el = document.elementFromPoint(e.pageX, e.pageY);
+    const endPoint = {
+      x: e.pageX,
+      y: e.pageY
+    }
+    this.setState({
+      endPoint,
+      selectionBox: this._calculateSelectionBox(this.state.startPoint, endPoint)
+    })
+  }
+
   _onMouseUp = e => {
     window.document.removeEventListener('mousemove', this._onMouseMove)
     window.document.removeEventListener('mouseup', this._onMouseUp)
+    console.log(this.state.selectionBox)
     this.setState({
       mouseDown   : false,
       startPoint  : null,
@@ -84,61 +74,8 @@ class Selection extends Component {
       selectionBox: null,
       appendMode  : false
     })
-    this.props.onSelectionChange.call(null, compose(reject(equals('selectionBox')), keys)(this.selectedChildren))
+    // this.props.onSelectionChange.call(null, compose(reject(equals('selectionBox')), keys)(this.selectedChildren))
   }
-
-  _onMouseMove = e => {
-    e.preventDefault()
-    if (this.state.mouseDown) {
-      const endPoint = {
-        x: e.pageX,
-        y: e.pageY
-      }
-      this.setState({
-        endPoint,
-        selectionBox: this._calculateSelectionBox(this.state.startPoint, endPoint)
-      })
-    }
-  }
-
-  _boxIntersects = (boxA, boxB) => {
-    // console.log('sens check', this.props.sensibility < this.state.selectionBox.width * this.state.selectionBox.height)
-// console.log('1 check', boxA.left <= boxB.left + boxB.width)
-    return this.props.sensibility < this.state.selectionBox.width * this.state.selectionBox.height &&
-      boxA.left <= boxB.left + boxB.width
-      && boxA.left + boxA.width >= boxB.left
-      && boxA.top <= boxB.top + boxB.height
-      && boxA.top + boxA.height >= boxB.top
-  }
-
-  _updateCollidingChildren = (selectionBox) => {
-    let tmpNode = null
-    let tmpBox = null
-    forEachObjIndexed((ref, key) => {
-      if (key !== 'selectionBox') {
-        tmpNode = ReactDOM.findDOMNode(ref)
-        tmpBox = {
-          top   : tmpNode.offsetTop,
-          left  : tmpNode.offsetLeft,
-          width : tmpNode.clientWidth,
-          height: tmpNode.clientHeight
-        }
-        // console.log('tmpBox', tmpBox)
-        // console.log('selectionBox', selectionBox)
-        if (this._boxIntersects(selectionBox, tmpBox)) {
-          this.selectedChildren[key] = true
-        } else if (!this.state.appendMode) {
-          delete this.selectedChildren[key]
-        }
-      }
-    }, this.subscribed)
-    this._update()
-  }
-
-  _update = () =>
-    forEachObjIndexed((ref, key) => {
-      ref.setState({isSelected: !!this.selectedChildren[key]})
-    }, this.subscribed)
 
   _calculateSelectionBox = (startPoint, endPoint) => {
     const parentNode = ReactDOM.findDOMNode(this.refs.selectionBox)
@@ -157,10 +94,6 @@ class Selection extends Component {
       ? null
       : <div style={{position: 'absolute', zIndex: 99, ...this.props.styleSelectionBox, ...this.state.selectionBox}} />
 
-  _subscribe = key => ref => {
-    if (ref) this.subscribed[key] = ref
-  }
-
   render = () => {
     let {style, className, ...others} = this.props
     return (
@@ -171,53 +104,14 @@ class Selection extends Component {
         onMouseDown={this._onMouseDown}
       >
         {/*{this._renderChildren()}*/}
-        {this.props.children(this._subscribe)}
+        {this.props.children}
         {this._renderSelectionBox()}
       </div>
     )
   }
-
-  /**
-   * Manually update the selection status of an array of items
-   * @param {[string]} keyArray the item's target key value
-   */
-  selectItems = (keyArray) => {
-    this.selectedChildren = compose(fromPairs, map(pair(__, true)), append('selectionBox'))(keyArray)
-    this.props.onSelectionChange.call(null, keyArray)
-    this._update()
-  }
-
-  /**
-   * Manually update the selection status of an item
-   * @param {string} key the item's target key value
-   */
-  selectItem = (key) => {
-    this.selectItems([key])
-  }
-
-  /**
-   * Manually select all items
-   */
-  selectAll = () => {
-    forEachObjIndexed((ref, key) => {
-      this.selectedChildren[key] = true
-    }, this.subscribed)
-    this.props.onSelectionChange.call(null, compose(reject(equals('selectionBox')), keys)(this.selectedChildren))
-    this._update()
-  }
-
-  /**
-   * Manually clear selected items
-   */
-  clearSelection = () => {
-    this.selectedChildren = {}
-    this.props.onSelectionChange.call(null, [])
-    this._update()
-  }
-
 }
 
-Selection.propTypes = {
+Selection2.propTypes = {
   enabled          : PropTypes.bool,
   onSelectionChange: PropTypes.func,
   selects          : PropTypes.oneOfType([PropTypes.bool, PropTypes.arrayOf(PropTypes.string)]),
@@ -225,7 +119,7 @@ Selection.propTypes = {
   styleSelectionBox: PropTypes.object
 }
 
-Selection.defaultProps = {
+Selection2.defaultProps = {
   enabled          : true,
   onSelectionChange: always(undefined),
   sensibility      : -1,
@@ -242,7 +136,7 @@ Selection.defaultProps = {
  * ~~~ SelectionItem
  *
  */
-class SelectionItem extends Component {
+class SelectionItem2 extends Component {
 
   constructor (props) {
     super(props)
@@ -261,13 +155,13 @@ class SelectionItem extends Component {
   }
 }
 
-SelectionItem.propTypes = {
+SelectionItem2.propTypes = {
   className      : PropTypes.string,
   style          : PropTypes.object,
   styleIfSelected: PropTypes.object
 }
 
-SelectionItem.defaultProps = {
+SelectionItem2.defaultProps = {
   className      : '',
   style          : {},
   styleIfSelected: {
@@ -283,4 +177,4 @@ SelectionItem.defaultProps = {
  * ~~~ export
  *
  */
-export { Selection, SelectionItem }
+export { Selection2, SelectionItem2 }

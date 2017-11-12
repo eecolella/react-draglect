@@ -1,8 +1,3 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './App';
-import registerServiceWorker from './registerServiceWorker';
-import './index.css';
+import {Selection, SelectionItem} from './lib/draglect'
 
-ReactDOM.render(<App />, document.getElementById('root'));
-registerServiceWorker();
+module.exports = {Selection, SelectionItem}

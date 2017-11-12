@@ -1,12 +1,13 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react'
 
-import { storiesOf } from '@storybook/react';
+import { storiesOf } from '@storybook/react'
 import { Selection, SelectionItem } from '../lib/draglect'
 import * as R from 'ramda'
 import './styles.css'
+import { Selection2, SelectionItem2 } from '../lib/draglect2'
 
 storiesOf('Draglect', module)
-  .add('main', () =><Demo/>)
+  .add('main', () => <Demo />)
 
 /*
  *
@@ -33,20 +34,33 @@ class Demo extends Component {
         <button onClick={e => this.setState({selects: true}) }>select all:</button>
         <button onClick={e => this.setState({selects: false}) }>clear all:</button>
         <button onClick={e => this.setState({selects: ['0', '2', '4']}) }>select 1 3 5</button>
-        <div style={{margin: 20, height:50}}>{this.state.selected.join(' ')}</div>
-        <Selection selects={this.state.selects} onSelectionChange={x => { console.log(x); this.setState({selected: x})}}>
-          {(subscribeSelection) => (
+        <div style={{margin: 20, minHeight: 80}}>{this.state.selected.join(' ')}</div>
+        <Selection2 selects={this.state.selects} onSelectionChange={x => {
+          console.log(x)
+          this.setState({selected: x})
+        }}>
             <div>
-              <SelectionItem className="item" key="asdasd" ref={subscribeSelection("asdasd")}>asdasd</SelectionItem>
-              {
-                R.compose(
-                  R.map(i => <SelectionItem className="item" key={i} ref={subscribeSelection(i)}>{i}</SelectionItem>),
-                  R.times(R.identity),
-                )(65)
-              }
+              <table>
+                <tbody>
+                  {
+                    R.compose(
+                      R.map(i =>
+                        <tr key={'row' + i}>
+                          {
+                            R.compose(
+                              R.map(k => <td key={'cell' + i + k}><SelectionItem2 className="item">a</SelectionItem2></td> ),
+                              R.times(R.identity)
+                            )(15)
+                          }
+                        </tr>
+                      ),
+                      R.times(R.identity)
+                    )(10)
+                  }
+                </tbody>
+              </table>
             </div>
-          )}
-        </Selection>
+        </Selection2>
       </div>
     )
   }
